@@ -18,7 +18,6 @@ async function addNote(title) {
   await fs.writeFile(notesPath, JSON.stringify(notes));
 }
 
-
 // Удаляем заметку
 async function removeNote(id) {
   const notes = await getNotes();
@@ -41,13 +40,13 @@ async function printNotes() {
   const notes = await getNotes();
 
   console.log(chalk.bgBlue('Here is the list of notes:'));
-  notes.forEach(({id, title}) => {
-    console.log(chalk.blue(id, title));
+  notes.forEach(({ id }) => {
+    console.log(chalk.blue(id));
   });
 }
 
 module.exports = {
   addNote,
-  printNotes,
+  getNotes,
   removeNote,
 };
