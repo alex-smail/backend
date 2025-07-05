@@ -4,6 +4,10 @@ const chalk = require('chalk'); // Для стилизации консольн�
 
 const notesPath = path.join(__dirname, 'db.json');
 
+async function saveNotes(notes) {
+  await fs.writeFile(notesPath, JSON.stringify(notes));
+}
+
 // Добавляем новую заметку
 async function addNote(title) {
   const notes = await getNotes();
@@ -14,20 +18,19 @@ async function addNote(title) {
   };
 
   notes.push(note);
-  console.log(chalk.bgGreen('Note was added'));
-  await fs.writeFile(notesPath, JSON.stringify(notes));
-}
 
+  await saveNotes(notes);
+  console.log(chalk.bgGreen('Note was added'));
+}
 
 // Удаляем заметку
 async function removeNote(id) {
   const notes = await getNotes();
 
-  const noteIndex = notes.findIndex((note) => note.id === id);
-  if (noteIndex !== -1) notes.splice(noteIndex, 1);
+  const filtered = notes.filter((note) => note.id !== id);
 
+  await saveNotes(filtered);
   console.log(chalk.bgGreen('Note was deleted'));
-  await fs.writeFile(notesPath, JSON.stringify(notes));
 }
 
 // Получаем массив всех заметок
@@ -41,13 +44,23 @@ async function printNotes() {
   const notes = await getNotes();
 
   console.log(chalk.bgBlue('Here is the list of notes:'));
-  notes.forEach(({id, title}) => {
-    console.log(chalk.blue(id, title));
+  notes.forEach(({ id }) => {
+    console.log(chalk.blue(id));
   });
+}
+
+async function editNote(id, title) {
+  const notes = await getNotes();
+  
+  const note = notes.find((note) => note.id === id);
+  note.title = title;
+  await saveNotes(notes);
+  console.log(chalk.bgGreen('Note was edited'));
 }
 
 module.exports = {
   addNote,
-  printNotes,
+  getNotes,
   removeNote,
+  editNote,
 };
