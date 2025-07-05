@@ -1,24 +1,50 @@
 document.addEventListener('click', (event) => {
-  switch (event.target.dataset.type) {
+  const type = event.target.dataset.type;
+  const id = event.target.dataset.id;
+  const li = event.target.closest('li');
+
+  switch (type) {
     case 'remove':
-      const id = event.target.dataset.id;
-      remove(id).then(() => {
-        event.target.closest('li').remove();
-      });
+      remove(id).then(() => li.remove());
       break;
     case 'edit':
-      const idTitle = event.target.dataset.id;
-      const liElement = event.target.closest('li');
-      const spanElement = liElement.querySelector('.note-title');
+      const span = li.querySelector('.note-title');
+      const oldTitle = span.textContent.trim();
 
-      const title = spanElement.textContent.trim();
-      const newTitle = prompt('Введите новое название', title);
+      const input = document.createElement('input');
+      input.className = 'form-control w-50';
+      input.value = oldTitle;
+
+      // меням span на input
+      span.replaceWith(input);
+      console.log(input.value.trim());
+      // меняем блок кнопок
+      const buttonsDiv = li.querySelector('.buttons');
+      buttonsDiv.innerHTML = `
+      <button class="btn btn-success" data-type="save" data-id="${id}"> Сохранить </button>
+      <button class="btn btn-danger" data-type="cancel" data-id="${id}"> Отменить </button>
+      `;
+      break;
+    case 'save':
+      const inputElement = li.querySelector('input');
+      const newTitle = inputElement.value.trim();
 
       if (newTitle)
-        edit(idTitle, newTitle).then(() => {
-          liElement.firstChild.textContent = newTitle;
+        edit(id, newTitle).then(() => {
+          const span = document.createElement('span');
+          span.className = 'note-title';
+          span.textContent = newTitle;
+
+          inputElement.replaceWith(span);
+
+          location.reload();
         });
       break;
+    case 'cancel':
+      location.reload();
+      break;
+    default:
+    // ничего не делаем
   }
 });
 

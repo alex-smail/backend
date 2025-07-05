@@ -36,7 +36,7 @@ app.delete('/:id', async (req, res) => {
   res.render('index', {
     title: 'Express App',
     notes: await getNotes(),
-    created: true,
+    created: false,
   });
 });
 
@@ -46,7 +46,7 @@ app.put('/:id', async (req, res) => {
   res.render('index', {
     title: 'Express App',
     notes: await getNotes(),
-    created: true,
+    created: false,
   });
 });
 
