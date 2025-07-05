@@ -1,1 +1,6 @@
-[{"title":"FromConsole","id":"1751288406709"},{"title":"This note is from browser","id":"1751460538216"},{"title":"Test","id":"1751460587274"},{"title":"Work work work","id":"1751460698701"},{"title":"1234","id":"1751608950742"},{"title":"hello","id":"1751609253275"},{"title":"hello","id":"1751609291192"}]
+[
+  { "title": "FromConsole", "id": "1751288406709" },
+  { "title": "This note is from browser", "id": "1751460538216" },
+  { "title": "Test1", "id": "1751460587274" },
+  { "title": "Work work work", "id": "1751460698701" }
+]

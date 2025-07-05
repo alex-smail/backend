@@ -1,7 +1,7 @@
 const express = require('express');
 const chalk = require('chalk');
 const path = require('path');
-const { addNote, getNotes, removeNote } = require('./notes.controller');
+const { addNote, getNotes, removeNote, editNote } = require('./notes.controller');
 
 const port = 3000;
 const app = express();
@@ -9,8 +9,9 @@ const app = express();
 app.set('view engine', 'ejs'); // устанавливаем view engine, указываем что работаем с ejs
 app.set('views', 'pages');
 
-app.use(express.static(path.resolve(__dirname, 'public')));
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); // для работы с json
+app.use(express.static(path.resolve(__dirname, 'public'))); // для работы с статикой
+app.use(express.urlencoded({ extended: true })); // для работы с формами
 
 app.get('/', async (req, res) => {
   res.render('index', {
@@ -31,8 +32,17 @@ app.post('/', async (req, res) => {
 
 app.delete('/:id', async (req, res) => {
   await removeNote(req.params.id);
-  // res.redirect('/');
 
+  res.render('index', {
+    title: 'Express App',
+    notes: await getNotes(),
+    created: true,
+  });
+});
+
+app.put('/:id', async (req, res) => {
+  await editNote(req.params.id, req.body.title);
+  
   res.render('index', {
     title: 'Express App',
     notes: await getNotes(),
